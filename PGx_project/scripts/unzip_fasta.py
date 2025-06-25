@@ -7,12 +7,12 @@ from Bio.SeqRecord import SeqRecord
 #Snakemake inputs
 zip_species = snakemake.input.zipfile
 output_fna = snakemake.output.fna   #download the fasta files
-raw_faa = snakemake.output.raw_faa    #convert to protein files
+output_faa = snakemake.output.faa    #convert to protein files
 species_name = snakemake.params.species
 
 #Make sure the output directory exists
 os.makedirs(os.path.dirname(output_fna), exist_ok=True)
-os.makedirs(os.path.dirname(raw_faa), exist_ok=True)
+os.makedirs(os.path.dirname(output_faa), exist_ok=True)
 
 #Step 1: Extract .fna file from ZIP
 try:
@@ -36,9 +36,8 @@ except Exception as e:
 
 
 #Step 2: Translate .fna to .faa
-valid_proteins = []
 try:
-    with open(raw_faa, "w") as faa_handle:
+    with open(output_faa, "w") as faa_handle:
         for record in SeqIO.parse(output_fna, "fasta"):
             try:
                 protein_seq = record.seq.translate(to_stop=True)
@@ -46,7 +45,7 @@ try:
                 SeqIO.write(protein_record, faa_handle, "fasta")
             except Exception as e:
                 print(f"[{species_name}] Error translating {record.id}: {e}")
-    print(f"[{species_name}] Translation complete -> {raw_faa}")
+    print(f"[{species_name}] Translation complete -> {output_faa}")
 except Exception as e:
     print(f"[{species_name}] Failed to write protein FASTA: {e}")
     exit(1)

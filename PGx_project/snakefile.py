@@ -45,7 +45,7 @@ rule format_fasta_headers:
     conda:
         "envs/biopython.yaml"
     script:
-        "scripts/unzip_fasta.py"
+        "scripts/format_fasta_headers.py"
 
 rule install_orthofinder:
     output:
