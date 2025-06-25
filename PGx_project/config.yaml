@@ -1,1 +1,4 @@
+species: ["human", "gorilla"]
 
+threads: 4
+orthofinder_outdir: results/orthofinder
